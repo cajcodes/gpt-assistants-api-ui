@@ -2,33 +2,32 @@ import os
 import base64
 import re
 import json
-
 import streamlit as st
 import openai
 from openai import AssistantEventHandler
 from tools import TOOL_MAP
 from typing_extensions import override
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
-azure_openai_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
-azure_openai_key = os.environ.get("AZURE_OPENAI_KEY")
-openai_api_key = os.environ.get("OPENAI_API_KEY")
-client = None
-if azure_openai_endpoint and azure_openai_key:
-    client = openai.AzureOpenAI(
-        api_key=azure_openai_key,
-        api_version="2024-02-15-preview",
-        azure_endpoint=azure_openai_endpoint,
-    )
-else:
-    client = openai.OpenAI(api_key=openai_api_key)
-assistant_id = os.environ.get("ASSISTANT_ID")
-instructions = os.environ.get("RUN_INSTRUCTIONS", "")
-assistant_title = os.environ.get("ASSISTANT_TITLE", "Assistants API UI")
-enabled_file_upload_message = os.environ.get(
-    "ENABLED_FILE_UPLOAD_MESSAGE", "Upload a file"
-)
+# Get OpenAI API key from environment variables
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
+# Ensure the OpenAI API key is set
+if not openai_api_key:
+    st.error("OpenAI API key is not set.")
+    st.stop()
+
+# Set the OpenAI API key
+openai.api_key = openai_api_key
+
+client = openai.OpenAI(api_key=openai_api_key)
+assistant_id = os.getenv("ASSISTANT_ID")
+instructions = os.getenv("RUN_INSTRUCTIONS", "")
+assistant_title = os.getenv("ASSISTANT_TITLE", "Assistants API UI")
+enabled_file_upload_message = "Increase my knowledge..."
 
 class EventHandler(AssistantEventHandler):
     @override
@@ -226,8 +225,31 @@ def disable_form():
     st.session_state.in_progress = True
 
 
+# Define login credentials
+USERNAME = "chris"
+PASSWORD = "ides0315"
+
+# Login screen
+def login():
+    st.sidebar.title("Login")
+    username = st.sidebar.text_input("Username")
+    password = st.sidebar.text_input("Password", type="password")
+    login_button = st.sidebar.button("Login")
+
+    if login_button:
+        if username == USERNAME and password == PASSWORD:
+            st.session_state.logged_in = True
+        else:
+            st.sidebar.error("Invalid username or password")
+
+# Main application
 def main():
     st.title(assistant_title)
+
+    # Add the logo above the file uploader in the sidebar
+    logo_path = "caj-logo.svg"
+    st.sidebar.image(logo_path, use_column_width=True)
+
     user_msg = st.chat_input(
         "Message", on_submit=disable_form, disabled=st.session_state.in_progress
     )
@@ -264,6 +286,11 @@ def main():
         st.rerun()
     render_chat()
 
+# Check login status
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
 
-if __name__ == "__main__":
+if st.session_state.logged_in:
     main()
+else:
+    login()

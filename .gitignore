@@ -1,7 +1,76 @@
+# Python bytecode
+*.pyc
+__pycache__/
+
+# Environment variables
 .env
+
+# Streamlit static and cached data
+.streamlit/
+
+# Virtual environment
+venv/
+env/
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints
+
+# Log files
+*.log
+
+# MacOS specific files
 .DS_Store
-files/*
-!files/.gitkeep
-__pycache__
-/.idea
-.python-version
+
+# Ignore all VSCode files
+.vscode/
+
+# Ignore all JetBrains files
+.idea/
+
+# Ignore all temporary files created by the editor
+*.swp
+*.swo
+
+# Ignore Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.manifest
+*.spec
+
+# Ignore coverage reports
+.coverage
+.coverage.*
+
+# Ignore mypy cache
+.mypy_cache/
+
+# Ignore pyright cache
+.pyright/
+
+# Ignore local history
+.localhistory/
+
+# Ignore the node_modules folder (if using npm/yarn)
+node_modules/
+
+# Ignore yarn.lock or package-lock.json (if using npm/yarn)
+yarn.lock
+package-lock.json
+
+# Ignore generated files (e.g., for JupyterBook)
+_build/
+
+# Ignore other unnecessary files
+*.tmp
+*.bak
